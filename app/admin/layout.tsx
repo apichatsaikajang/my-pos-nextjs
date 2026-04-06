@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const menuItems = [
     { name: 'สรุปภาพรวม', href: '/admin/summary', icon: <LayoutDashboard size={20} />, adminOnly: true },
-    // { name: 'หน้าจอขาย POS', href: '/admin/pos', icon: <ShoppingCart size={20} />, adminOnly: false },
+    { name: 'หน้าจอขาย POS', href: '/admin/pos', icon: <ShoppingCart size={20} />, adminOnly: false },
     { name: 'ประวัติการขาย', href: '/admin/orders', icon: <History size={20} />, adminOnly: false },
     // { name: 'จัดการสต็อก', href: '/admin/inventory', icon: <Package size={20} />, adminOnly: false },
     { name: 'จัดการเมนูและราคา', href: '/admin/products', icon: <Coffee size={20} />, adminOnly: true },
