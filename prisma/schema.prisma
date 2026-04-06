@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. ตารางสินค้าเมนูขาย (หน้า POS)
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String?
+  priceHot  Float    @default(0)
+  priceIce  Float    @default(0)
+  priceSpin Float    @default(0)
+  category  String   @default("Coffee") 
+  stock     Int      @default(0) // สำหรับสินค้าสำเร็จรูป
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 2. ตารางสต็อกวัตถุดิบ (เม็ดกาแฟ, นม, ผงต่างๆ)
+model Ingredient {
+  id            Int      @id @default(autoincrement())
+  name          String   // เช่น "เม็ดกาแฟคั่วเข้ม"
+  amount        Float    @default(0) 
+  unit          String   // เช่น "g", "ml"
+  lowStockLevel Float    @default(500) 
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// 3. ตารางบันทึกการขาย (Order)
+model Order {
+  id          Int         @id @default(autoincrement())
+  totalAmount Float
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  items       OrderItem[] // ต้องมีตัวนี้เพื่อให้ดึงรายการสินค้ามาโชว์ใน Dashboard ได้
+}
+
+model OrderItem {
+  id        Int    @id @default(autoincrement())
+  name      String
+  type      String
+  sweet     String
+  price     Float
+  qty       Int    @default(1)
+  orderId   Int
+  order     Order  @relation(fields: [orderId], references: [id])
+}
+
+// 5. ระบบสมาชิกสะสมแต้ม
+model Member {
+  id        Int      @id @default(autoincrement())
+  phone     String   @unique 
+  name      String?  @default("ลูกค้าทั่วไป")
+  points    Int      @default(0) 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 6. ระบบจัดการผู้ใช้งาน
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  name      String
+  role      String   @default("STAFF") 
+  createdAt DateTime @default(now())
+}
